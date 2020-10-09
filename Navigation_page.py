@@ -27,10 +27,10 @@ def ChromeDriver():
         Add_Extension.click()
         break
     
-    wx.MessageBox(' -_-  Add Extension and Select Proxy Between 25 SEC -_- ', 'Info', wx.OK | wx.ICON_WARNING)
+    wx.MessageBox(' -_-  Add Extension and Select Proxy Between 25 SEC -_- ', 'industry.gov.iq', wx.OK | wx.ICON_WARNING)
     time.sleep(25)  # WAIT UNTIL CHANGE THE MANUAL VPN SETTING
     browser.get("http://www.industry.gov.iq/index.php?atlas=en")
-    browser.set_window_size(1024, 600)
+    wx.MessageBox(' -_-  Fill captche first if there -_- ', 'industry.gov.iq', wx.OK | wx.ICON_WARNING)
     browser.maximize_window()
     # browser.switch_to.window(browser.window_handles[1])
     # browser.close()
@@ -52,7 +52,7 @@ def ChromeDriver():
     for Search in browser.find_elements_by_xpath('/html/body/div[1]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr/td/center[1]/input'):
         Search.click()
         break
-    time.sleep(1.5)
+    time.sleep(2)
     Scrap_data(browser)
 
 
@@ -68,7 +68,6 @@ def Scrap_data(browser):
                     publish_date1 = datetime_object.strftime("%Y-%m-%d")
                     if publish_date1 >= Global_var.From_Date:
                         print("Tender Date Alive")
-
                         Global_var.Total += 1
                         break
                     else:
@@ -89,7 +88,7 @@ def Scrap_data(browser):
                     break
                 time.sleep(2)
                 SegFeild = []
-                for data in range(42):
+                for data in range(45):
                     SegFeild.append('')
 
                 get_htmlSource = ""
@@ -153,6 +152,11 @@ def Scrap_data(browser):
 
                 # Source Name
                 SegFeild[31] = 'industry.gov.iq'
+
+                SegFeild[20] = ""
+                SegFeild[21] = "" 
+                SegFeild[42] = SegFeild[7]
+                SegFeild[43] = ""
 
                 for SegIndex in range(len(SegFeild)):
                     print(SegIndex, end=' ')
