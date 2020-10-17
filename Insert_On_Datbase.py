@@ -150,27 +150,27 @@ def create_filename(get_htmlSource , SegFeild):
         try:
             File_path = "Z:\\" + Fileid + ".html"
             file1 = open(File_path , "w", encoding='utf-8')
-            Html_wala_Tag = get_htmlSource.replace('upload/', 'http://www.industry.gov.iq/upload/')
-            string_Translate_Table = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\">" + \
-                                     "<BODY><table align=\"center\" border=\"1\" style=\"width:95%;border-spacing:0;border-collapse: collapse;border:1px solid #666666; margin-top:5px; margin-bottom:5px;\">" + \
-                                     "<tr><td colspan=\"2\"; style=\"background-color:#004040; font-weight: bold; padding:7px;border-bottom:1px solid #666666; color:white;\">Tender Details</td></tr>" + \
-                                     "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Name of Directorate </td><td style=\"padding:7px;\">" + \
-                                     SegFeild[12] + "</td></tr>" + \
-                                     "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Tender Subject </td><td style=\"padding:7px;\">" + \
-                                     SegFeild[19] + "</td></tr>" + \
-                                     "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Contact Email </td><td style=\"padding:7px;\">" + \
-                                     SegFeild[1] + "</td></tr>" + \
-                                     "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Bid number </td><td style=\"padding:7px;\">" + \
-                                     SegFeild[13] + "</td></tr>" + \
-                                     "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">More Detail </td><td style=\"padding:7px;\">" + \
-                                     SegFeild[18] + "</td></tr>" + \
-                                     "<tr bgcolor=\"#ffffff\" onmouseover=\"this.style.backgroundColor='#def3ff'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Attachment </td><td style=\"padding:7px;\">""<a href=" + \
-                                     SegFeild[5] + " target=\"_blank\">View</a>""</td></tr>" + "</td></tr></table>"
-            Final_Doc = "<HTML><BODY><style style=\"text/css\"> td{ padding:5px;}</style>" + string_Translate_Table + "<BR><BR><font color='RED'>[Disclaimer: The above text is machine translated. For accurate information kindly refer the below original document.]</font><BR><BR>" + Html_wala_Tag + "</BODY></HTML>"
-            Final_HTML_Document = "<head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\" /><title>Tender Document</title>" + \
-                                  "<link rel=\"shortcut icon\" type=\"image/png\" href=\"https://www.tendersontime.com/favicon.ico\"/></head>" + \
-                                  "<Blockquote style='border:1px solid; padding:10px;'>" + Final_Doc + "</Blockquote>"
-            file1.write(str(Final_HTML_Document))
+
+            # string_Translate_Table = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\">" + \
+            #                          "<BODY><table align=\"center\" border=\"1\" style=\"width:95%;border-spacing:0;border-collapse: collapse;border:1px solid #666666; margin-top:5px; margin-bottom:5px;\">" + \
+            #                          "<tr><td colspan=\"2\"; style=\"background-color:#004040; font-weight: bold; padding:7px;border-bottom:1px solid #666666; color:white;\">Tender Details</td></tr>" + \
+            #                          "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Name of Directorate </td><td style=\"padding:7px;\">" + \
+            #                          SegFeild[12] + "</td></tr>" + \
+            #                          "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Tender Subject </td><td style=\"padding:7px;\">" + \
+            #                          SegFeild[19] + "</td></tr>" + \
+            #                          "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Contact Email </td><td style=\"padding:7px;\">" + \
+            #                          SegFeild[1] + "</td></tr>" + \
+            #                          "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Bid number </td><td style=\"padding:7px;\">" + \
+            #                          SegFeild[13] + "</td></tr>" + \
+            #                          "<tr bgcolor=\"#e8eff1\" onmouseover=\"this.style.backgroundColor='#d6edf5'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">More Detail </td><td style=\"padding:7px;\">" + \
+            #                          SegFeild[18] + "</td></tr>" + \
+            #                          "<tr bgcolor=\"#ffffff\" onmouseover=\"this.style.backgroundColor='#def3ff'\" onmouseout=\"this.style.backgroundColor=''\"><td style=\"padding:7px;\">Attachment </td><td style=\"padding:7px;\">""<a href=" + \
+            #                          SegFeild[5] + " target=\"_blank\">View</a>""</td></tr>" + "</td></tr></table>"
+            Final_Doc = "<HTML><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\" /><title>Tender Document</title></head><BODY><Blockquote style='border:1px solid; padding:10px;'>" + get_htmlSource + "</Blockquote></BODY></HTML>"
+            # Final_HTML_Document = "" + \
+            #                       "<link rel=\"shortcut icon\" type=\"image/png\" href=\"https://www.tendersontime.com/favicon.ico\"/></head>" + \
+            #                       "<Blockquote style='border:1px solid; padding:10px;'>" + Final_Doc + "</Blockquote>"
+            file1.write(str(Final_Doc))
             file1.close()
             print("Code Reached On create_filename")
             return Fileid
