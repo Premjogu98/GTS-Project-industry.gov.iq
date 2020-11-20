@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import time
 from datetime import datetime
 import Global_var
@@ -11,19 +12,13 @@ import wx
 app = wx.App()
 
 def ChromeDriver():
-    # File_Location = open("D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\industry.gov.iq\\Location For Database & Driver.txt", "r")
-    # TXT_File_AllText = File_Location.read()
-    # Chromedriver = str(TXT_File_AllText).partition("Driver=")[2].partition("\")")[0].strip()
-    # chrome_options = Options()
-    # chrome_options.add_extension('D:\\0 PYTHON EXE SQL CONNECTION & DRIVER PATH\\industry.gov.iq\\Browsec-VPN.crx')  # ADD EXTENSION Browsec-VPN
-    # browser = webdriver.Chrome(executable_path=str(Chromedriver),
-    #                            chrome_options=chrome_options)
-    # browser = webdriver.Chrome(executable_path=str(Chromedriver))
-    browser = webdriver.Chrome(executable_path=str(f"C:\\chromedriver.exe"))
-    browser.get("""https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh?hl=en" ping="/url?sa=t&amp;source=web&amp;rct=j&amp;url=https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh%3Fhl%3Den&amp;ved=2ahUKEwivq8rjlcHmAhVtxzgGHZ-JBMgQFjAAegQIAhAB""")
+    chrome_options = Options()
+    chrome_options.add_extension('C:\\BrowsecVPN.crx')
+    browser = webdriver.Chrome(executable_path=str(f"C:\\chromedriver.exe"),chrome_options=chrome_options)
     browser.maximize_window()
-    wx.MessageBox(' -_-  Add Extension and Select Proxy Between 25 SEC -_- ', 'industry.gov.iq', wx.OK | wx.ICON_WARNING)
-    time.sleep(25)  # WAIT UNTIL CHANGE THE MANUAL VPN SETTING
+    # browser.get("""https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh?hl=en" ping="/url?sa=t&amp;source=web&amp;rct=j&amp;url=https://chrome.google.com/webstore/detail/browsec-vpn-free-and-unli/omghfjlpggmjjaagoclmmobgdodcjboh%3Fhl%3Den&amp;ved=2ahUKEwivq8rjlcHmAhVtxzgGHZ-JBMgQFjAAegQIAhAB""")
+    wx.MessageBox(' -_-  Add Extension and Select Proxy Between 10 SEC -_- ', 'Info', wx.OK | wx.ICON_WARNING)
+    time.sleep(15)  # WAIT UNTIL CHANGE THE MANUAL VPN SETtING
     browser.get("http://industry.gov.iq/")
     wx.MessageBox(' -_-  Fill captche first if there -_- ', 'industry.gov.iq', wx.OK | wx.ICON_WARNING)
     time.sleep(2)
@@ -83,21 +78,21 @@ def Scrap_data(browser, tender_href_list):
                     break
                 # Purchaser
                 Directorate_Name = ''
-                for Directorate_Name in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[2]/td[2]'):
+                for Directorate_Name in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[2]/td[2]'):
                     Directorate_Name = Directorate_Name.get_attribute('innerText').replace('&nbsp;', '').strip()
                     SegFeild[12] = Directorate_Name.strip()
                 
                 SegFeild[8] = ''
                 
                 # Title
-                for Tender_Subject in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[3]/td[2]'):
+                for Tender_Subject in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[3]/td[2]'):
                     Tender_Subject = Tender_Subject.get_attribute('innerText').replace('&nbsp;', '').strip()
                     Tender_Subject = string.capwords(str(Tender_Subject)).strip()
                     SegFeild[19] = Tender_Subject
                     break
 
                 # Email
-                for Email in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[4]/td[2]/div'):
+                for Email in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[4]/td[2]/div'):
                     Email = Email.get_attribute('innerText').replace('&nbsp;', '').replace('&nbsp;', '').strip().replace(' ','')
                     if ',' in Email:
                         Email_list = Email.split(',')
@@ -107,7 +102,7 @@ def Scrap_data(browser, tender_href_list):
                     break
 
                 # tender NO
-                for Bid_number in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[5]/td[2]'):
+                for Bid_number in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[8]/td[2]'):
                     Bid_number = Bid_number.get_attribute('innerText').replace('&nbsp;', '').strip()
                     SegFeild[13] = Bid_number.strip()
                     break
@@ -164,8 +159,20 @@ def Scrap_data(browser, tender_href_list):
                     print(SegFeild[SegIndex])
                     SegFeild[SegIndex] = html.unescape(str(SegFeild[SegIndex]))
                     SegFeild[SegIndex] = str(SegFeild[SegIndex]).replace("'", "''")
+                if len(SegFeild[19]) >= 200:
+                    SegFeild[19] = str(SegFeild[19])[:200]+'...'
+
+                if len(SegFeild[18]) >= 1500:
+                    SegFeild[18] = str(SegFeild[18])[:1500]+'...'
+                    wx.MessageBox(' Short Desc To Long ','industry.gov.iq', wx.OK | wx.ICON_INFORMATION)
+
+                if SegFeild[19] == '' or SegFeild[29] == '':
+                    wx.MessageBox(' Short Desc Blank OR Dealine Blank','industry.gov.iq', wx.OK | wx.ICON_INFORMATION)
+                else:
+                    check_date(get_htmlSource, SegFeild)
+
+        
                 a = False
-                check_date(get_htmlSource, SegFeild)
                 print(" Total: " + str(len(tender_href_list)) + " Duplicate: " + str(Global_var.duplicate) + " Expired: " + str(Global_var.expired) + " Inserted: " + str(Global_var.inserted) + " Skipped: " + str(Global_var.skipped) + " Deadline Not given: " + str(Global_var.deadline_Not_given) + " QC Tenders: " + str(Global_var.QC_Tender),"\n")
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
