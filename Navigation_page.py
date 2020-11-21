@@ -9,6 +9,7 @@ import ctypes
 import string
 import html
 import wx
+import re
 app = wx.App()
 
 def ChromeDriver():
@@ -72,62 +73,96 @@ def Scrap_data(browser, tender_href_list):
                     SegFeild.append('')
 
                 get_htmlSource = ""
-                for outerHTML in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table'):
+                for outerHTML in browser.find_elements_by_xpath('/html/body/div/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table'):
                     get_htmlSource = outerHTML.get_attribute('outerHTML')
                     get_htmlSource = get_htmlSource.replace('href="upload/', 'href="http://www.industry.gov.iq/upload/')
                     break
+                if get_htmlSource == '':
+                    for outerHTML in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table'):
+                        get_htmlSource = outerHTML.get_attribute('outerHTML')
+                        get_htmlSource = get_htmlSource.replace('href="upload/', 'href="http://www.industry.gov.iq/upload/')
+                        break
+                get_htmlSource_for_scrap = get_htmlSource.replace('\n','').replace('&nbsp;','').strip()
+                get_htmlSource_for_scrap = re.sub('\s+', ' ', get_htmlSource_for_scrap)
                 # Purchaser
-                Directorate_Name = ''
-                for Directorate_Name in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[2]/td[2]'):
-                    Directorate_Name = Directorate_Name.get_attribute('innerText').replace('&nbsp;', '').strip()
-                    SegFeild[12] = Directorate_Name.strip()
-                
-                SegFeild[8] = ''
+                # Directorate_Name = ''
+                # for Directorate_Name in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[2]/td[2]'):
+                #     Directorate_Name = Directorate_Name.get_attribute('innerText').replace('&nbsp;', '').strip()
+                #     SegFeild[12] = Directorate_Name.strip()
+                Directorate_Name = get_htmlSource_for_scrap.partition("اسم المديرية:</td>")[2].partition("</td>")[0].strip()
+                cleanr = re.compile('<.*?>')
+                Directorate_Name = re.sub(cleanr, '', Directorate_Name)
+                SegFeild[12] = Directorate_Name.strip()
                 
                 # Title
-                for Tender_Subject in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[3]/td[2]'):
-                    Tender_Subject = Tender_Subject.get_attribute('innerText').replace('&nbsp;', '').strip()
-                    Tender_Subject = string.capwords(str(Tender_Subject)).strip()
-                    SegFeild[19] = Tender_Subject
-                    break
+                # for Tender_Subject in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[3]/td[2]'):
+                #     Tender_Subject = Tender_Subject.get_attribute('innerText').replace('&nbsp;', '').strip()
+                #     Tender_Subject = string.capwords(str(Tender_Subject)).strip()
+                #     SegFeild[19] = Tender_Subject
+                #     break
+                Tender_Subject = get_htmlSource_for_scrap.partition("موضوع المناقصة:</td>")[2].partition("</td>")[0]
+                cleanr = re.compile('<.*?>')
+                Tender_Subject = re.sub(cleanr, '', Tender_Subject)
+                Tender_Subject = string.capwords(str(Tender_Subject)).strip()
+                SegFeild[19] = Tender_Subject
 
                 # Email
-                for Email in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[4]/td[2]/div'):
-                    Email = Email.get_attribute('innerText').replace('&nbsp;', '').replace('&nbsp;', '').strip().replace(' ','')
-                    if ',' in Email:
-                        Email_list = Email.split(',')
-                        SegFeild[1] = Email_list[0].strip()
-                    else:
-                        SegFeild[1] = Email.strip()
-                    break
+                # for Email in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[4]/td[2]/div'):
+                #     Email = Email.get_attribute('innerText').replace('&nbsp;', '').replace('&nbsp;', '').strip().replace(' ','')
+                #     if ',' in Email:
+                #         Email_list = Email.split(',')
+                #         SegFeild[1] = Email_list[0].strip()
+                #     else:
+                #         SegFeild[1] = Email.strip()
+                #     break
+                Email = get_htmlSource_for_scrap.partition("بريد إتصالِ إلكتروني:</td>")[2].partition("</div>")[0].replace('<td>','').replace('<div>','').strip()
+                cleanr = re.compile('<.*?>')
+                Email = re.sub(cleanr, '', Email)
+                SegFeild[1] = Email
 
                 # tender NO
-                for Bid_number in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[8]/td[2]'):
-                    Bid_number = Bid_number.get_attribute('innerText').replace('&nbsp;', '').strip()
-                    SegFeild[13] = Bid_number.strip()
-                    break
-
+                # for Bid_number in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[8]/td[2]'):
+                #     Bid_number = Bid_number.get_attribute('innerText').replace('&nbsp;', '').strip()
+                #     SegFeild[13] = Bid_number.strip()
+                #     break
+                Bid_number = get_htmlSource_for_scrap.partition("رقم المناقصة:</td>")[2].partition("</td>")[0].strip()
+                cleanr = re.compile('<.*?>')
+                Bid_number = re.sub(cleanr, '', Bid_number)
+                SegFeild[13] = Bid_number.strip()
                 # Release Date
-                Release_Date = ""
-                for Release_Date in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[6]/td[2]'):
-                    Release_Date = Release_Date.get_attribute('innerText').strip()
-                    break
-
+                # Release_Date = ""
+                # for Release_Date in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[6]/td[2]'):
+                #     Release_Date = Release_Date.get_attribute('innerText').strip()
+                #     break
+                Release_Date = get_htmlSource_for_scrap.partition("تاريخ الاصدار:</td>")[2].partition("</td>")[0].strip()
+                cleanr = re.compile('<.*?>')
+                Release_Date = re.sub(cleanr, '', Release_Date)
                 # Extention Date
-                Extention_Date = ""
-                for Extention_Date in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[8]/td[2]'):
-                    Extention_Date = Extention_Date.get_attribute('innerText').replace('&nbsp;', '').strip()
-                    if Extention_Date == "لايوجد تمديد":
+                # Extention_Date = ""
+                # for Extention_Date in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[8]/td[2]'):
+                #     Extention_Date = Extention_Date.get_attribute('innerText').replace('&nbsp;', '').strip()
+                #     if Extention_Date == "لايوجد تمديد":
+                #         Extention_Date = ""
+                #     break
+                Extention_Date = get_htmlSource_for_scrap.partition("تاريخ تمديد المناقصة:</td>")[2].partition("</td>")[0].strip()
+                cleanr = re.compile('<.*?>')
+                Extention_Date = re.sub(cleanr, '', Extention_Date).strip()
+                if Extention_Date == "لايوجد تمديد":
                         Extention_Date = ""
-                    break
-
+                        
                 # Close Date
                 try:
-                    for Close_Date in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[7]/td[2]'):
-                        Close_Date = Close_Date.get_attribute('innerText').strip()
-                        datetime_object = datetime.strptime(Close_Date, "%Y-%m-%d")
-                        mydate = datetime_object.strftime("%Y-%m-%d")
-                        SegFeild[24] = mydate
+                    # for Close_Date in browser.find_elements_by_xpath('/html/body/div[2]/center/table/tbody/tr[7]/td/table[1]/tbody/tr/td/center/table/tbody/tr[7]/td[2]'):
+                    #     Close_Date = Close_Date.get_attribute('innerText').strip()
+                    #     datetime_object = datetime.strptime(Close_Date, "%Y-%m-%d")
+                    #     mydate = datetime_object.strftime("%Y-%m-%d")
+                    #     SegFeild[24] = mydate
+                    Close_Date = get_htmlSource_for_scrap.partition("تاريخ الاصدار:</td>")[2].partition("</td>")[0].strip()
+                    cleanr = re.compile('<.*?>')
+                    Close_Date = re.sub(cleanr, '', Close_Date).strip()
+                    datetime_object = datetime.strptime(Close_Date, "%Y-%m-%d")
+                    mydate = datetime_object.strftime("%Y-%m-%d")
+                    SegFeild[24] = mydate
                 except:
                     SegFeild[24] = ""
 
@@ -166,7 +201,7 @@ def Scrap_data(browser, tender_href_list):
                     SegFeild[18] = str(SegFeild[18])[:1500]+'...'
                     wx.MessageBox(' Short Desc To Long ','industry.gov.iq', wx.OK | wx.ICON_INFORMATION)
 
-                if SegFeild[19] == '' or SegFeild[29] == '':
+                if SegFeild[19] == '' or SegFeild[24] == '':
                     wx.MessageBox(' Short Desc Blank OR Dealine Blank','industry.gov.iq', wx.OK | wx.ICON_INFORMATION)
                 else:
                     check_date(get_htmlSource, SegFeild)
